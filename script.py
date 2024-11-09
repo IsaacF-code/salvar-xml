@@ -21,7 +21,7 @@ def get_ip_parts():
     parts = ip_address.split('.')
     last_part = parts[-1][-1] # Último dígito do IP
     penultimate_part = parts[-2] # Penúltima parte do IP
-    return last_part, location_map.get(penultimate_part, "Descohecido")
+    return last_part, location_map.get(penultimate_part, "Desconhecido")
 
 # Diretório onde os arquivos XML estão localizados
 directory = 'C:\\CISS\\SAT\\CF-e\\Enviados'
@@ -30,7 +30,7 @@ directory = 'C:\\CISS\\SAT\\CF-e\\Enviados'
 output_directory = 'C:\\ArquivosXML'
 
 # Arquivo de log para armazenar a última data compactada por mês
-log_file_path = os.path.join(output_directory, 'compacted_dates.txt')
+log_file_path = os.path.join(output_directory, 'Datas da compactação.txt')
 
 # Criar o diretório de saída, se não existir
 os.makedirs(output_directory, exist_ok=True)
@@ -54,7 +54,7 @@ last_compacted_dates = load_last_compacted_dates()
 # Dicionário para armazenar arquivos por mês
 files_by_month = {}
 
-ip_last_part, loja = get_ip_parts()
+ip_last_part, store = get_ip_parts()
 
 # Iterar sobre os arquivos no diretório
 for filename in os.listdir(directory):
@@ -78,7 +78,7 @@ for filename in os.listdir(directory):
 # Compactar os arquivos por mês
 new_last_dates = {}
 for month_year, files in tqdm(files_by_month.items(), desc="Compactando arquivos"):
-    zip_filename = os.path.join(output_directory, f"CF-e {month_year} - Caixa {ip_last_part} - {loja}.zip")
+    zip_filename = os.path.join(output_directory, f"CF-e {month_year} - Caixa {ip_last_part} - {store}.zip")
     with zipfile.ZipFile(zip_filename, 'a', zipfile.ZIP_DEFLATED) as zipf:
         for file_path, file_date in tqdm(files, desc=f"{month_year}", leave=False):
             zipf.write(file_path, os.path.basename(file_path))
